@@ -5,6 +5,7 @@ import (
 	"log"
 	"bufio"
 	"strings"
+	"strconv"
 )
 
 type Config struct {
@@ -38,5 +39,69 @@ func (this *Config)LoadFromFile(config_file string) (err error) {
 			this.store[line_parts[0]] = line_parts[1]
 		}
 	}
+	return
+}
+
+type ConfigError struct {
+	ErrorMesssage string
+	ErrorInKey    string
+}
+
+func (this ConfigError)Error() string {
+	return this.ErrorMesssage
+}
+//Get string value from config
+func (this *Config)GetString(key string) (value string, err error) {
+	err = nil
+	value, ok := this.store[key]
+	if !ok {
+		err := ConfigError{ErrorMesssage:"Key not found:" + key, ErrorInKey:key}
+		return "", err
+	}
+	return
+}
+//Get int64 value from config
+func (this *Config)GetInt64(key string) (i int64, err error) {
+	err = nil
+	value, ok := this.store[key]
+	if !ok {
+		err := ConfigError{ErrorMesssage:"Key not found:" + key, ErrorInKey:key}
+		return 0, err
+	}
+	i, err = strconv.ParseInt(value, 10, 64)
+	return
+}
+//Get int32 value from config
+func (this *Config)GetInt32(key string) (i int32, err error) {
+	err = nil
+	value, ok := this.store[key]
+	if !ok {
+		err := ConfigError{ErrorMesssage:"Key not found:" + key, ErrorInKey:key}
+		return 0, err
+	}
+	i64, err := strconv.ParseInt(value, 10, 32)
+	i = int32(i64)
+	return i, err
+}
+//Get boolean value from config
+func (this *Config)GetBool(key string) (b bool, err error) {
+	err = nil
+	value, ok := this.store[key]
+	if !ok {
+		err := ConfigError{ErrorMesssage:"Key not found:" + key, ErrorInKey:key}
+		return false, err
+	}
+	b, err = strconv.ParseBool(value)
+	return
+}
+//Get float value from config
+func (this *Config)GetFloat(key string) (f float64, err error) {
+	err = nil
+	value, ok := this.store[key]
+	if !ok {
+		err := ConfigError{ErrorMesssage:"Key not found:" + key, ErrorInKey:key}
+		return 0, err
+	}
+	f, err = strconv.ParseFloat(value, 64)
 	return
 }
