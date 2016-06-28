@@ -36,7 +36,7 @@ func (this *Config)LoadFromFile(config_file string) (err error) {
 		line := scanner.Text()
 		if !strings.HasPrefix(line, "#") && strings.Index(line, "=") != -1 {
 			line_parts := strings.Split(line, "=")
-			this.store[line_parts[0]] = line_parts[1]
+			this.store[strings.TrimSpace(line_parts[0])] = strings.TrimSpace(line_parts[1])
 		}
 	}
 	return
