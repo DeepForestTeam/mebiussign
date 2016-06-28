@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/DeepForestTeam/mobiussign/components/app"
+	"github.com/DeepForestTeam/mobiussign/components"
 	_ "github.com/DeepForestTeam/mobiussign/components/memstore"
 )
 
 func main() {
-	fmt.Println("Starting MepiusSign(tm) ver.", app.APP_VERSION)
+	fmt.Println("Starting MepiusSign(tm) ver.", components.APP_VERSION)
 }

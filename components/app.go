@@ -1,4 +1,4 @@
-package app
+package components
 
 const(
 	APP_VERSION="0.01A"
