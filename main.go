@@ -1,16 +1,17 @@
 package main
 
 import (
+	"log"
 	"flag"
 	"github.com/DeepForestTeam/mobiussign/components"
-	_ "github.com/DeepForestTeam/mobiussign/components/memstore"
 	"github.com/DeepForestTeam/mobiussign/components/config"
-	"log"
+	_ "github.com/DeepForestTeam/mobiussign/components/memstore"
 )
-
-func main() {
+func init(){
 	//Read config file
 	config_file := flag.String("config", "conf/service.ini", "Define config file path.")
 	config.GlobalConfig.LoadFromFile(*config_file)
+}
+func main() {
 	log.Println("Starting MepiusSign(tm) ver.", components.APP_VERSION)
 }
