@@ -15,6 +15,7 @@ type Config struct {
 var GlobalConfig Config
 
 func init() {
+	log.Println("* Init config")
 	GlobalConfig.store = make(map[string]string)
 }
 

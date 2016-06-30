@@ -1,5 +1,7 @@
 package memstore
 
+import "log"
+
 type GlobalMemStore struct {
 	TotalKeys int64
 	storage   map[string]interface{}
@@ -8,6 +10,7 @@ type GlobalMemStore struct {
 var GlobalMemStoreInstance GlobalMemStore
 
 func init() {
+	log.Println("* Init store")
 	GlobalMemStoreInstance.TotalKeys = 0
 	GlobalMemStoreInstance.storage = make(map[string]interface{})
 }
