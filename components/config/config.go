@@ -10,6 +10,7 @@ import (
 
 type Config struct {
 	store map[string]string
+	cache map[string]interface{}
 }
 
 var GlobalConfig Config
