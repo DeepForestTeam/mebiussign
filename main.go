@@ -6,7 +6,8 @@ import (
 	"github.com/DeepForestTeam/mobiussign/components"
 	"github.com/DeepForestTeam/mobiussign/components/config"
 	"github.com/DeepForestTeam/mobiussign/components/timestamps"
-	_ "github.com/DeepForestTeam/mobiussign/components/memstore"
+	_ "github.com/DeepForestTeam/mobiussign/components/store"
+	"github.com/DeepForestTeam/mobiussign/components/store"
 )
 
 func init() {
@@ -15,7 +16,10 @@ func init() {
 	config.GlobalConfig.LoadFromFile(*config_file)
 }
 func main() {
+	store.GlobalMemStoreInstance.ConnectDB()
 	log.Println("Starting MepiusSign(tm) ver.", components.APP_VERSION)
 	ts := timestamps.TimeStampSignature{}
-	log.Println(ts.GetCurrent())
+	hash, _ := ts.GetCurrent()
+	log.Println(len(hash), hash)
+
 }
