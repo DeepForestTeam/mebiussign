@@ -1,41 +1,62 @@
 package store
 
 import (
-	"log"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+
+	"github.com/asdine/storm"
+	"github.com/DeepForestTeam/mobiussign/components/log"
+	"github.com/DeepForestTeam/mobiussign/components/config"
 )
 
-type GlobalMemStore struct {
-	//db
+type GlobalStore struct {
+	db        *storm.DB
 	TotalKeys int64
 	storage   map[string]interface{}
 }
 
-type TimeStamp struct {
-	gorm.Model
-	ID       int64  //Field name: id, type:bigint(20)
-	UnixTime int64  //Field name: unix_time, type:bigint(20)
-	TimeSign string //Field name: time_sign, type:varchar(128)
-}
-
-var GlobalMemStoreInstance GlobalMemStore
+var GlobalStoreBarrel GlobalStore
 
 func init() {
-	log.Println("* Init store")
-	GlobalMemStoreInstance.TotalKeys = 0
-	GlobalMemStoreInstance.storage = make(map[string]interface{})
+	log.Info("* Init store")
+	GlobalStoreBarrel.TotalKeys = 0
+	GlobalStoreBarrel.storage = make(map[string]interface{})
 }
 
-func (this *GlobalMemStore)ConnectDB() {
-
-}
-
-func (this *GlobalMemStore)GetByKey(key string) (value interface{}, ok bool) {
+func (this *GlobalStore)ConnectDB() (err error) {
+	db_name, err := config.GlobalConfig.GetString("BOLT_DB")
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	log.Debug("Open BoltDB Storage")
+	db, err := storm.Open(db_name, storm.AutoIncrement())
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	this.db = db
 	return
 }
 
-func (this *GlobalMemStore)isKeyExist(key string) (ok bool) {
+type StoreObject struct {
+	ID              int64
+	ObjectModelName string
+	ObjectUID       string
+	ObjectID        int64
+	ObjectShardID   int64
+	ObjectOwnerUID  string
+}
+
+func (this *StoreObject)Init() {
+
+}
+func (this *StoreObject)Save() (err error) {
+	err = nil
+	err = GlobalStoreBarrel.db.Set(this.ObjectModelName, this.ObjectUID, this)
+	//log.Fatalln(err)
+	return
+}
+func (this *StoreObject)Get() (err error) {
+	err = nil
+	err = GlobalStoreBarrel.db.Get(this.ObjectModelName, this.ObjectUID, this)
 	return
 }

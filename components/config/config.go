@@ -2,7 +2,7 @@ package config
 
 import (
 	"os"
-	"log"
+	"github.com/DeepForestTeam/mobiussign/components/log"
 	"bufio"
 	"strings"
 	"strconv"
@@ -16,7 +16,7 @@ type Config struct {
 var GlobalConfig Config
 
 func init() {
-	log.Println("* Init config")
+	log.Debug("* Init config")
 	GlobalConfig.store = make(map[string]string)
 }
 
@@ -28,7 +28,7 @@ func (this *Config)LoadFromFile(config_file string) (err error) {
 	err = nil
 	file, err := os.Open(config_file)
 	if err != nil {
-		log.Fatalln("Can not open config file:", err)
+		log.Fatal("Can not open config file:", err)
 		return
 	}
 	defer file.Close()
@@ -60,6 +60,7 @@ func (this *Config)GetString(key string) (value string, err error) {
 		err := ConfigError{ErrorMesssage:"Key not found:" + key, ErrorInKey:key}
 		return "", err
 	}
+	value = strings.Trim(value, `"`)
 	return
 }
 //Get int64 value from config

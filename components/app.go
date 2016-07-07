@@ -1,10 +1,13 @@
 package components
 
-import "log"
-
-const(
-	APP_VERSION="0.01A"
+import (
+	"github.com/DeepForestTeam/mobiussign/components/log"
 )
-func init(){
-	log.Println("* Init components")
+
+const (
+	APP_VERSION = "0.01A"
+)
+
+func init() {
+	log.Info("* Init components")
 }
