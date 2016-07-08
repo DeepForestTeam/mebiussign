@@ -1,10 +1,10 @@
 package store
 
 import (
-
 	"github.com/asdine/storm"
 	"github.com/DeepForestTeam/mobiussign/components/log"
 	"github.com/DeepForestTeam/mobiussign/components/config"
+	"encoding/json"
 )
 
 type GlobalStore struct {
@@ -37,26 +37,31 @@ func (this *GlobalStore)ConnectDB() (err error) {
 	return
 }
 
-type StoreObject struct {
-	ID              int64
-	ObjectModelName string
-	ObjectUID       string
-	ObjectID        int64
-	ObjectShardID   int64
-	ObjectOwnerUID  string
-}
-
-func (this *StoreObject)Init() {
-
-}
-func (this *StoreObject)Save() (err error) {
-	err = nil
-	err = GlobalStoreBarrel.db.Set(this.ObjectModelName, this.ObjectUID, this)
-	//log.Fatalln(err)
+func SaveObject(model_name, key string, object interface{}) (err error) {
+	data, err := json.Marshal(object)
+	if err != nil {
+		log.Error("Can not json encode object:", err)
+		return
+	}
+	err = GlobalStoreBarrel.db.Set(model_name, key, data)
+	if err != nil {
+		log.Error("Can not save object:", err)
+		return
+	}
+	log.Debug("Save:",key, "->", string(data))
 	return
 }
-func (this *StoreObject)Get() (err error) {
-	err = nil
-	err = GlobalStoreBarrel.db.Get(this.ObjectModelName, this.ObjectUID, this)
+func GetObject(model_name, key string, object interface{}) (err error) {
+	var data []byte
+	err = GlobalStoreBarrel.db.Get(model_name, key, &data)
+	if err != nil {
+		log.Error("Con not get object:", err)
+		return
+	}
+	log.Debug("Load:",key, "->", string(data))
+	err = json.Unmarshal(data, object)
+	if err != nil {
+		log.Error("Con not unjson object:", err)
+	}
 	return
 }

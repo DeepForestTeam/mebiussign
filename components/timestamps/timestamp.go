@@ -7,40 +7,49 @@ import (
 	"github.com/DeepForestTeam/mobiussign/components/config"
 	"github.com/DeepForestTeam/mobiussign/components/store"
 	"github.com/DeepForestTeam/mobiussign/components/log"
+	"errors"
 )
 
 type TimeStampSignature struct {
-	store.StoreObject
-	UnixTimeStamp int64   `json:"time_stamp"`
-	TimeHashSign  string  `json:"time_hash"`
+	TimeZone      string    `json:"time_zone"`
+	TimeStamp     string    `json:"time"`
+	UnixTimeStamp int64     `json:"unix_time"`
+	TimeHashSign  string    `json:"time_hash"`
 }
-
-type TimeLine struct {
-	TimeStampIndex map[string]int64
-	LastTimeStamp  TimeStampSignature
-	TimeLine       []TimeStampSignature
-}
-
-var MasterTimeLine TimeLine
 
 func init() {
 	log.Info("* Init timestamps")
-	MasterTimeLine.TimeStampIndex = make(map[string]int64)
 }
 
+var ObjectModelName = "time_stamp"
+
+var (
+	ErrorNotFound = errors.New("Time stamp not found")
+)
+
 func (this *TimeStampSignature)GetCurrent() (hash string, err error) {
-	this.ObjectModelName = "time_stamp"
-	timestamp := time.Now().Unix()
+	time_now := time.Now().UTC()
+	timestamp := time_now.Unix()
 	time_stamp_string := fmt.Sprintf("%d", timestamp)
 	time_base_salt, err := config.GlobalConfig.GetString("BASE_TIME_SALT")
+	if err != nil {
+		return
+	}
+	time_format, err := config.GlobalConfig.GetString("BASE_TIME_FORMAT")
 	if err != nil {
 		return
 	}
 	signed_value := time_base_salt + time_stamp_string
 	hash = fmt.Sprintf("%X", sha512.Sum512_256([]byte(signed_value)))
 	this.TimeHashSign = hash
+	this.TimeStamp = time_now.Format(time_format)
 	this.UnixTimeStamp = timestamp
-	this.ObjectUID = hash
-	this.Save()
+	this.TimeZone = "UTC"
+	store.SaveObject(ObjectModelName, hash, this)
+	return
+}
+
+func (this *TimeStampSignature)GetBySign(hash string) (err error) {
+	err = store.GetObject(ObjectModelName, hash, this)
 	return
 }

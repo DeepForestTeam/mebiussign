@@ -6,7 +6,9 @@ import (
 	"github.com/DeepForestTeam/mobiussign/components/log"
 	"github.com/DeepForestTeam/mobiussign/components/config"
 	"github.com/DeepForestTeam/mobiussign/components/store"
-	"github.com/DeepForestTeam/mobiussign/components/timestamps"
+	"net/http"
+	"github.com/gorilla/mux"
+	"github.com/DeepForestTeam/mobiussign/restapi/routers"
 )
 
 func init() {
@@ -23,10 +25,9 @@ func main() {
 		panic(err)
 	}
 	log.Debug("Bolt/StromDB connected")
-	ts := timestamps.TimeStampSignature{}
-	hash, _ := ts.GetCurrent()
-	log.Info("TS:", len(hash), hash)
-	////ts.Get()
-	//log.Println("TSD:", ts)
-}
+	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/", routers.Index)
+	http_port, err := config.GlobalConfig.GetString("HTTP_PORT")
+	log.Fatal(http.ListenAndServe(":" + http_port, router))
 
+}
