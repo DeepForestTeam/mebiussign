@@ -27,7 +27,8 @@ var (
 	ErrorNotFound = errors.New("Time stamp not found")
 )
 
-func (this *TimeStampSignature)GetCurrent() (hash string, err error) {
+func (this *TimeStampSignature)GetCurrent() (err error) {
+	hash := ""
 	time_now := time.Now().UTC()
 	timestamp := time_now.Unix()
 	time_stamp_string := fmt.Sprintf("%d", timestamp)

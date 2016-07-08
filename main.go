@@ -27,7 +27,8 @@ func main() {
 	log.Debug("Bolt/StromDB connected")
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", routers.Index)
+	router.HandleFunc("/api/ping", routers.Ping)
+	router.HandleFunc("/api/time/get", routers.TimeApiGetCerrent)
 	http_port, err := config.GlobalConfig.GetString("HTTP_PORT")
 	log.Fatal(http.ListenAndServe(":" + http_port, router))
-
 }
