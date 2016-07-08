@@ -29,6 +29,7 @@ func main() {
 	router.HandleFunc("/", routers.Index)
 	router.HandleFunc("/api/ping", routers.Ping)
 	router.HandleFunc("/api/time/get", routers.TimeApiGetCerrent)
+	router.HandleFunc("/api/time/check/{time_hash}", routers.TimeApiCheck)
 	http_port, err := config.GlobalConfig.GetString("HTTP_PORT")
 	log.Fatal(http.ListenAndServe(":" + http_port, router))
 }
