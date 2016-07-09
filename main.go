@@ -6,9 +6,7 @@ import (
 	"github.com/DeepForestTeam/mobiussign/components/log"
 	"github.com/DeepForestTeam/mobiussign/components/config"
 	"github.com/DeepForestTeam/mobiussign/components/store"
-	"net/http"
-	"github.com/gorilla/mux"
-	"github.com/DeepForestTeam/mobiussign/restapi/routers"
+	"github.com/DeepForestTeam/mobiussign/components/forest"
 )
 
 func init() {
@@ -25,11 +23,6 @@ func main() {
 		panic(err)
 	}
 	log.Debug("Bolt/StromDB connected")
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", routers.Index)
-	router.HandleFunc("/api/ping", routers.Ping)
-	router.HandleFunc("/api/time/get", routers.TimeApiGetCerrent)
-	router.HandleFunc("/api/time/check/{time_hash}", routers.TimeApiCheck)
-	http_port, err := config.GlobalConfig.GetString("HTTP_PORT")
-	log.Fatal(http.ListenAndServe(":" + http_port, router))
+	err = forest.StartServer()
+	log.Fatal(err)
 }

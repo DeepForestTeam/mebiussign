@@ -8,7 +8,7 @@ import (
 var log = logging.MustGetLogger("example")
 
 var format = logging.MustStringFormatter(
-	`%{color}%{time:15:04:05} %{shortfile}` + "\t" + `: %{callpath}` + "\t"+ `| %{level:.4s}` + "\t| " + `%{message}%{color:reset}`,
+	`%{color}%{time:15:04:05} [%{level:.4s}] %{shortfile}` + "\t"+ ` | %{message}%{color:reset}`,//%{callpath}
 	//`%{color}%{time:15:04:05.000} %{shortfunc} ` + "\t" + `▶ %{level:.4s} %{id:03x} %{message}%{color:reset}`,
 )
 var backend *logging.LogBackend
