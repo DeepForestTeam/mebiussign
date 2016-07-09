@@ -13,7 +13,9 @@ func init() {
 	log.Info("* Init Forest server")
 	router = mux.NewRouter().StrictSlash(true)
 }
+
 func StartServer() (err error) {
+
 	http_port, err := config.GlobalConfig.GetString("HTTP_PORT")
 	if err != nil {
 		log.Fatal("Can not start HTTP server:", err)

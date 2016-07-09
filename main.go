@@ -6,7 +6,7 @@ import (
 	"github.com/DeepForestTeam/mobiussign/components/log"
 	"github.com/DeepForestTeam/mobiussign/components/config"
 	"github.com/DeepForestTeam/mobiussign/components/store"
-	"github.com/DeepForestTeam/mobiussign/components/forest"
+	"github.com/DeepForestTeam/mobiussign/restapi/forest"
 )
 
 func init() {

@@ -48,7 +48,7 @@ func SaveObject(model_name, key string, object interface{}) (err error) {
 		log.Error("Can not save object:", err)
 		return
 	}
-	log.Debug("Save:",key, "->", string(data))
+	log.Debug("Save:", key, "->", string(data))
 	return
 }
 func GetObject(model_name, key string, object interface{}) (err error) {
@@ -58,7 +58,7 @@ func GetObject(model_name, key string, object interface{}) (err error) {
 		log.Error("Con not get object:", err)
 		return
 	}
-	log.Debug("Load:",key, "->", string(data))
+	log.Debug("Load:", key, "->", string(data))
 	err = json.Unmarshal(data, object)
 	if err != nil {
 		log.Error("Con not unjson object:", err)
