@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"encoding/json"
 	"github.com/DeepForestTeam/mobiussign/components"
+	"github.com/DeepForestTeam/mobiussign/restapi/forest"
+	"github.com/DeepForestTeam/mobiussign/components/log"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -18,4 +20,8 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 	ping_answer["service"] = "MobiusSign™ API"
 	ping_string, _ := json.Marshal(ping_answer)
 	fmt.Fprintf(w, string(ping_string))
+}
+func init() {
+	log.Info("* Init base API")
+	forest.AddRouterFunc("/api/ping", Ping)
 }

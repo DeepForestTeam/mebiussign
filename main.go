@@ -7,6 +7,8 @@ import (
 	"github.com/DeepForestTeam/mobiussign/components/config"
 	"github.com/DeepForestTeam/mobiussign/components/store"
 	"github.com/DeepForestTeam/mobiussign/restapi/forest"
+
+	_ "github.com/DeepForestTeam/mobiussign/restapi/routers"
 )
 
 func init() {

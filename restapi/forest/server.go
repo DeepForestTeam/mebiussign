@@ -7,8 +7,6 @@ import (
 	"github.com/DeepForestTeam/mobiussign/components/log"
 )
 
-var router *mux.Router
-
 func init() {
 	log.Info("* Init Forest server")
 	router = mux.NewRouter().StrictSlash(true)
