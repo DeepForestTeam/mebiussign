@@ -42,11 +42,11 @@ func (this *TimeStampSignature)GetCurrent() (err error) {
 	time_now := time.Now().UTC()
 	timestamp := time_now.Unix()
 	time_stamp_string := fmt.Sprintf("%d", timestamp)
-	time_base_salt, err := config.GlobalConfig.GetString("BASE_TIME_SALT")
+	time_base_salt, err := config.GetString("BASE_TIME_SALT")
 	if err != nil {
 		return
 	}
-	time_format, err := config.GlobalConfig.GetString("BASE_TIME_FORMAT")
+	time_format, err := config.GetString("BASE_TIME_FORMAT")
 	if err != nil {
 		return
 	}

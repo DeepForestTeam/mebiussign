@@ -15,16 +15,16 @@ type GlobalStore struct {
 	storage   map[string]interface{}
 }
 
-var GlobalStoreBarrel GlobalStore
+var storage_instance GlobalStore
 
 func init() {
 	log.Info("* Init store")
-	GlobalStoreBarrel.TotalKeys = 0
-	GlobalStoreBarrel.storage = make(map[string]interface{})
+	storage_instance.TotalKeys = 0
+	storage_instance.storage = make(map[string]interface{})
 }
 
-func (this *GlobalStore)ConnectDB() (err error) {
-	db_name, err := config.GlobalConfig.GetString("BOLT_DB")
+func ConnectDB() (err error) {
+	db_name, err := config.GetString("BOLT_DB")
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -35,19 +35,19 @@ func (this *GlobalStore)ConnectDB() (err error) {
 		log.Fatal(err)
 		return
 	}
-	this.db = db
+	storage_instance.db = db
 	return
 }
 
 func SaveObject(model_name, key string, object interface{}) (err error) {
 	data, err := json.Marshal(object)
-	GlobalStoreBarrel.mux.Lock()
-	defer GlobalStoreBarrel.mux.Unlock()
+	storage_instance.mux.Lock()
+	defer storage_instance.mux.Unlock()
 	if err != nil {
 		log.Error("Can not json encode object:", err)
 		return
 	}
-	err = GlobalStoreBarrel.db.Set(model_name, key, data)
+	err = storage_instance.db.Set(model_name, key, data)
 	if err != nil {
 		log.Error("Can not save object:", err)
 		return
@@ -56,10 +56,10 @@ func SaveObject(model_name, key string, object interface{}) (err error) {
 	return
 }
 func GetObject(model_name, key string, object interface{}) (err error) {
-	GlobalStoreBarrel.mux.Lock()
-	defer GlobalStoreBarrel.mux.Unlock()
+	storage_instance.mux.Lock()
+	defer storage_instance.mux.Unlock()
 	var data []byte
-	err = GlobalStoreBarrel.db.Get(model_name, key, &data)
+	err = storage_instance.db.Get(model_name, key, &data)
 	if err != nil {
 		log.Error("Con not get object:", err)
 		return
@@ -73,7 +73,7 @@ func GetObject(model_name, key string, object interface{}) (err error) {
 }
 func GetStat(model_name string) (err error) {
 
-//	GlobalStoreBarrel.db.Range()
+	//	GlobalStoreBarrel.db.Range()
 	return
 }
 func CountObjects(model_name string) (count int, err error) {
