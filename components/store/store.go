@@ -71,3 +71,12 @@ func GetObject(model_name, key string, object interface{}) (err error) {
 	}
 	return
 }
+func GetStat(model_name string) (err error) {
+
+//	GlobalStoreBarrel.db.Range()
+	return
+}
+func CountObjects(model_name string) (count int, err error) {
+
+	return
+}

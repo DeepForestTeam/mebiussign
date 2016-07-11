@@ -29,9 +29,8 @@ func (this *TimeApiController)Get() {
 		log.Error("Can not create new time stamp!")
 		fmt.Fprintf(this.Output, `{"error":"Can not create time stamp", "result_code":500 }`)
 		return
-	} else {
-
 	}
+
 	this.Json = ts
 }
 func TimeApiCheck(w http.ResponseWriter, r *http.Request) {
