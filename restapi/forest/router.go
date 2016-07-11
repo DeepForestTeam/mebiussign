@@ -12,18 +12,19 @@ func init() {
 	log.Info("* Init Forest router")
 }
 
-type Controller interface {
-	Process() error
-}
-
 func AddRouterFunc(uri string, f func(http.ResponseWriter, *http.Request)) {
 	log.Debug("Register flat handler for:", uri)
 	router.HandleFunc(uri, f)
 }
-func AddRouterObject(uri string, handler Control) {
+func AddRouter(uri string, handler Controller) {
 	router.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		handler.Input = *r
-		handler.Output = w
-		handler.Process()
+		handler.Process(w, r)
+		switch r.Method {
+		case "GET":
+			handler.Get()
+		case "POST":
+			handler.Post()
+		}
+		handler.RenderTemplate()
 	})
 }

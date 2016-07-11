@@ -18,6 +18,7 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 	ping_answer["ping"] = "pong"
 	ping_answer["version"] = components.APP_VERSION
 	ping_answer["service"] = "MobiusSign™ API"
+	ping_answer["result_code"] = 200
 	ping_string, _ := json.Marshal(ping_answer)
 	fmt.Fprintf(w, string(ping_string))
 }

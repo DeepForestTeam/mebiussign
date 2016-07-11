@@ -5,9 +5,11 @@ import (
 	"github.com/DeepForestTeam/mobiussign/components/log"
 	"github.com/DeepForestTeam/mobiussign/components/config"
 	"encoding/json"
+	"sync"
 )
 
 type GlobalStore struct {
+	mux       sync.Mutex
 	db        *storm.DB
 	TotalKeys int64
 	storage   map[string]interface{}
@@ -39,6 +41,8 @@ func (this *GlobalStore)ConnectDB() (err error) {
 
 func SaveObject(model_name, key string, object interface{}) (err error) {
 	data, err := json.Marshal(object)
+	GlobalStoreBarrel.mux.Lock()
+	defer GlobalStoreBarrel.mux.Unlock()
 	if err != nil {
 		log.Error("Can not json encode object:", err)
 		return
@@ -52,6 +56,8 @@ func SaveObject(model_name, key string, object interface{}) (err error) {
 	return
 }
 func GetObject(model_name, key string, object interface{}) (err error) {
+	GlobalStoreBarrel.mux.Lock()
+	defer GlobalStoreBarrel.mux.Unlock()
 	var data []byte
 	err = GlobalStoreBarrel.db.Get(model_name, key, &data)
 	if err != nil {
