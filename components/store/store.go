@@ -40,6 +40,10 @@ func Set(model_name, key string, object interface{}) (err error) {
 func Get(model_name, key string, object interface{}) (err error) {
 	return storage.driver.Get(model_name, key, object)
 }
+func Last(model_name string, object interface{}) (key string, err error) {
+	return storage.driver.Last(model_name, object)
+}
+
 func Count(model_name string) (count int, err error) {
 	return storage.driver.Count(model_name)
 }

@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	APP_VERSION = "0.001 Alpha"
+	APP_VERSION = "0.001 Alpha/TimeApi 0.01Alpha/SignApi 0.01Alpha"
 )
 
 func init() {

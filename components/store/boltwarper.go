@@ -140,11 +140,19 @@ func (this *BoltDriver)Last(bucket_name string, data interface{}) (key string, e
 		if err != nil {
 			return err
 		}
-		_, val := index_bucket.Cursor().Last()
-		if val == nil {
+		_, index_val := index_bucket.Cursor().Last()
+		if index_val == nil {
 			return ErrNotIndexed
 		}
-		key = string(val)
+		key = string(index_val)
+		if err != nil {
+			return err
+		}
+		bucket, err := this.getBucket(tx, bucket_name)
+		val := bucket.Get([]byte(key))
+		if len(val) == 0 {
+			return ErrKeyNotFound
+		}
 		err = this.Codec.Decode(val, data)
 		return err
 	})

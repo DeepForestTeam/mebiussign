@@ -69,7 +69,8 @@ func (this *TimeStampSignature)GetCurrent() (err error) {
 
 func (this *TimeStampSignature)GetBySign(hash string) (err error) {
 	err = store.Get(TimeStampStorage, hash, this)
-	if err == store.ErrKeyNotFound {
+	if err != nil {
+		log.Error("Can not get timestamp from storage:", err)
 		return ErrorNotFound
 	}
 	return nil
