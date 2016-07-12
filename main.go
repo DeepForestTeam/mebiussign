@@ -3,11 +3,10 @@ package main
 import (
 	"github.com/DeepForestTeam/mobiussign/components"
 	"github.com/DeepForestTeam/mobiussign/components/log"
-	_ "github.com/DeepForestTeam/mobiussign/components/config"
-	"github.com/DeepForestTeam/mobiussign/components/store"
 	"github.com/DeepForestTeam/mobiussign/restapi/forest"
-
+	_ "github.com/DeepForestTeam/mobiussign/components/config"
 	_ "github.com/DeepForestTeam/mobiussign/restapi/routers"
+	"github.com/DeepForestTeam/mobiussign/components/store"
 )
 
 func init() {
@@ -17,7 +16,7 @@ func main() {
 	log.Info("Starting MobiusSign™ ver.", components.APP_VERSION)
 	err := store.ConnectDB()
 	if err != nil {
-		log.Fatal("BOLT?", err)
+		log.Fatal("Can not connect to storage:", err)
 		panic(err)
 	}
 	log.Debug("Bolt/StromDB connected")

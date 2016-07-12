@@ -1,82 +1,45 @@
 package store
 
 import (
-	"github.com/asdine/storm"
 	"github.com/DeepForestTeam/mobiussign/components/log"
-	"github.com/DeepForestTeam/mobiussign/components/config"
-	"encoding/json"
-	"sync"
 )
 
 type GlobalStore struct {
-	mux       sync.Mutex
-	db        *storm.DB
-	TotalKeys int64
-	storage   map[string]interface{}
+	driver StorageDriver
 }
 
-var storage_instance GlobalStore
+type StorageDriver interface {
+	Connect() error
+	Close()
+	Set(section, key string, data interface{}) error
+	Get(section, key string, data interface{}) error
+	Count(section string) (int, error)
+	Last(section string, data interface{}) (string, error)
+}
+
+var storage GlobalStore
 
 func init() {
 	log.Info("* Init store")
-	storage_instance.TotalKeys = 0
-	storage_instance.storage = make(map[string]interface{})
+	storage.driver = &BoltDriver{}
 }
 
 func ConnectDB() (err error) {
-	db_name, err := config.GetString("BOLT_DB")
+	err = storage.driver.Connect()
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	log.Debug("Open BoltDB Storage")
-	db, err := storm.Open(db_name, storm.AutoIncrement())
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-	storage_instance.db = db
+	log.Debug("Connect Driver Storage")
 	return
 }
 
-func SaveObject(model_name, key string, object interface{}) (err error) {
-	data, err := json.Marshal(object)
-	storage_instance.mux.Lock()
-	defer storage_instance.mux.Unlock()
-	if err != nil {
-		log.Error("Can not json encode object:", err)
-		return
-	}
-	err = storage_instance.db.Set(model_name, key, data)
-	if err != nil {
-		log.Error("Can not save object:", err)
-		return
-	}
-	log.Debug("Save:", key, "->", string(data))
-	return
+func Set(model_name, key string, object interface{}) (err error) {
+	return storage.driver.Set(model_name, key, object)
 }
-func GetObject(model_name, key string, object interface{}) (err error) {
-	storage_instance.mux.Lock()
-	defer storage_instance.mux.Unlock()
-	var data []byte
-	err = storage_instance.db.Get(model_name, key, &data)
-	if err != nil {
-		log.Error("Con not get object:", err)
-		return
-	}
-	log.Debug("Load:", key, "->", string(data))
-	err = json.Unmarshal(data, object)
-	if err != nil {
-		log.Error("Con not unjson object:", err)
-	}
-	return
+func Get(model_name, key string, object interface{}) (err error) {
+	return storage.driver.Get(model_name, key, object)
 }
-func GetStat(model_name string) (err error) {
-
-	//	GlobalStoreBarrel.db.Range()
-	return
-}
-func CountObjects(model_name string) (count int, err error) {
-
-	return
+func Count(model_name string) (count int, err error) {
+	return storage.driver.Count(model_name)
 }

@@ -22,7 +22,16 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 	ping_string, _ := json.Marshal(ping_answer)
 	fmt.Fprintf(w, string(ping_string))
 }
+
+func BoltTest(w http.ResponseWriter, r *http.Request) {
+	var ping_answer map[string]interface{}
+	ping_answer = make(map[string]interface{})
+	ping_answer["test"] = "boltTest"
+	ping_string, _ := json.Marshal(ping_answer)
+	fmt.Fprintf(w, string(ping_string))
+}
 func init() {
 	log.Info("* Init base API")
 	forest.AddRouterFunc("/api/ping", Ping)
+	forest.AddRouterFunc("/api/BT", BoltTest)
 }
