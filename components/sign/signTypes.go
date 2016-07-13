@@ -13,8 +13,8 @@ type SignatureRow struct {
 	//System given info
 	TimeStamp       time.Time `json:"time_stamp"`
 	TimeStampHash   string    `json:"time_hash"`
-	PrevKey         string `json:"prev_key"`
-	PrevSignature   string `json:"prev_signature"`
+	SaltKey         string `json:"salt_key"`
+	SaltHash        string `json:"salt_hash"`
 	MobiusSignature string `json:"mobius_sign"`
 }
 
