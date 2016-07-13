@@ -13,6 +13,6 @@ MobiusTime API allow get time stamp, signed by SHA2 hash by http get request: `/
 ```
 Now you can check this time-stamp: `/api/time/73566D3311AFC0EB22994E79CA279175077EFC2DB16FFB57B025C1F590A00CB5`
 
-#### Uset oackets:
+#### Uset packets:
 * https://github.com/op/go-logging
 * https://github.com/boltdb/bolt
