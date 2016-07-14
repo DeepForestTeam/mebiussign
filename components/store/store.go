@@ -15,6 +15,7 @@ type StorageDriver interface {
 	Get(section, key string, data interface{}) error
 	Count(section string) (int, error)
 	Last(section string, data interface{}) (string, error)
+	IsKeyExist(section string, key string) (bool, error)
 }
 
 var storage GlobalStore
@@ -42,6 +43,10 @@ func Get(model_name, key string, object interface{}) (err error) {
 }
 func Last(model_name string, object interface{}) (key string, err error) {
 	return storage.driver.Last(model_name, object)
+}
+
+func IsKeyExist(model_name string, key string) (bool, error) {
+	return storage.driver.IsKeyExist(model_name, key)
 }
 
 func Count(model_name string) (count int, err error) {

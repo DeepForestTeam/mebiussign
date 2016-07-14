@@ -159,6 +159,28 @@ func (this *BoltDriver)Last(bucket_name string, data interface{}) (key string, e
 
 	return
 }
+
+func (this *BoltDriver)IsKeyExist(bucket_name string, key string) (exist bool, err error) {
+	err = this.db.View(func(tx *bolt.Tx) error {
+		bucket, err := this.getBucket(tx, bucket_name)
+		if err != nil {
+			return err
+		}
+		val := bucket.Get([]byte(key))
+		if len(val) == 0 {
+			return ErrKeyNotFound
+		}
+		return err
+	})
+	if err == nil {
+		exist = true
+	}
+	if err == ErrKeyNotFound || err == ErrSectionNotFound {
+		err = nil
+	}
+	return
+}
+
 func (this *BoltDriver)getBucket(tx *bolt.Tx, bucket_name string) (bucket *bolt.Bucket, err error) {
 	bucket = tx.Bucket([]byte(bucket_name))
 	if bucket == nil {
@@ -212,7 +234,6 @@ func (this *BoltDriver)unlockAll() {
 func init() {
 
 }
-
 func uintToBytes(num uint64) []byte {
 	buf := new(bytes.Buffer)
 	_ = binary.Write(buf, binary.BigEndian, num)
