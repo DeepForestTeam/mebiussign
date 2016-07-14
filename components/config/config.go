@@ -23,10 +23,6 @@ func init() {
 	GlobalConfig.LoadFromFile(*config_file)
 }
 
-// Load key-value pairs from ini-like config file
-// key=value
-// Any line, starting # - comment
-
 func (this *Config)LoadFromFile(config_file string) (err error) {
 	err = nil
 	file, err := os.Open(config_file)
@@ -47,20 +43,12 @@ func (this *Config)LoadFromFile(config_file string) (err error) {
 	return
 }
 
-type ConfigError struct {
-	ErrorMesssage string
-	ErrorInKey    string
-}
-
-func (this ConfigError)Error() string {
-	return this.ErrorMesssage
-}
 //Get string value from config
 func (this *Config)GetString(key string) (value string, err error) {
 	err = nil
 	value, ok := this.store[key]
 	if !ok {
-		err := ConfigError{ErrorMesssage:"Key not found:" + key, ErrorInKey:key}
+		err := ErrorKeyNotFound
 		return "", err
 	}
 	value = strings.Trim(value, `"`)
@@ -71,7 +59,7 @@ func (this *Config)GetInt64(key string) (i int64, err error) {
 	err = nil
 	value, ok := this.store[key]
 	if !ok {
-		err := ConfigError{ErrorMesssage:"Key not found:" + key, ErrorInKey:key}
+		err := ErrorKeyNotFound
 		return 0, err
 	}
 	i, err = strconv.ParseInt(value, 10, 64)
@@ -82,7 +70,7 @@ func (this *Config)GetInt32(key string) (i int32, err error) {
 	err = nil
 	value, ok := this.store[key]
 	if !ok {
-		err := ConfigError{ErrorMesssage:"Key not found:" + key, ErrorInKey:key}
+		err := ErrorKeyNotFound
 		return 0, err
 	}
 	i64, err := strconv.ParseInt(value, 10, 32)
@@ -94,7 +82,7 @@ func (this *Config)GetBool(key string) (b bool, err error) {
 	err = nil
 	value, ok := this.store[key]
 	if !ok {
-		err := ConfigError{ErrorMesssage:"Key not found:" + key, ErrorInKey:key}
+		err := ErrorKeyNotFound
 		return false, err
 	}
 	b, err = strconv.ParseBool(value)
@@ -105,7 +93,7 @@ func (this *Config)GetFloat(key string) (f float64, err error) {
 	err = nil
 	value, ok := this.store[key]
 	if !ok {
-		err := ConfigError{ErrorMesssage:"Key not found:" + key, ErrorInKey:key}
+		err := ErrorKeyNotFound
 		return 0, err
 	}
 	f, err = strconv.ParseFloat(value, 64)

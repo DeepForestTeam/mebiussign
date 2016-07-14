@@ -167,6 +167,7 @@ func (this *BoltDriver)getBucket(tx *bolt.Tx, bucket_name string) (bucket *bolt.
 	}
 	return
 }
+
 func (this *BoltDriver)setCodec(name string) {
 	switch name {
 	case "json":
@@ -177,7 +178,6 @@ func (this *BoltDriver)setCodec(name string) {
 		this.Codec = bson.Codec
 	}
 }
-
 func (this *BoltDriver)setDefaultCodec() {
 	this.setCodec("json")
 }
