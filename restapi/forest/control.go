@@ -95,7 +95,7 @@ func (this *Control)parseRequestData() (err error) {
 //Support mehtods
 func (this *Control)ServeJSON() {
 	this.AutoRender = false
-	json_string, _ := json.Marshal(this.Json)
+	json_string, _ := json.MarshalIndent(this.Json, "", "  ")
 	this.Output.Header().Set("Content-Type", "application/json;charset=utf-8")
 	fmt.Fprintf(this.Output, string(json_string))
 	return

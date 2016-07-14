@@ -162,7 +162,6 @@ func (this *BoltDriver)Last(bucket_name string, data interface{}) (key string, e
 func (this *BoltDriver)getBucket(tx *bolt.Tx, bucket_name string) (bucket *bolt.Bucket, err error) {
 	bucket = tx.Bucket([]byte(bucket_name))
 	if bucket == nil {
-		log.Error("BoltDriver/Warper: Bucket not found:", bucket_name)
 		return bucket, ErrSectionNotFound
 	}
 	return

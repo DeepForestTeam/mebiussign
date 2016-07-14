@@ -87,7 +87,7 @@ func (this *TimeStampSignature)sign() (err error) {
 		log.Error("Can not get base time salt:", err)
 		return
 	}
-	first := false
+	//first := false
 	var bytes_block []byte
 	last_block := TimeStampSignature{}
 	_, err = store.Last(TimeStampStorage, &last_block)
@@ -100,7 +100,7 @@ func (this *TimeStampSignature)sign() (err error) {
 		log.Warning("First Time signature!")
 		this.SaltHash = base_salt_string
 		err = nil
-		first = true
+	//	first = true
 	} else {
 		this.SaltHash = last_block.MobiusTime
 	}
