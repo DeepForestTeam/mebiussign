@@ -25,6 +25,7 @@ type SignatureRow struct {
 	TimeStampHash   string        `json:"time_hash"`
 	SaltKey         string        `json:"salt_key"`
 	SaltHash        string        `json:"salt_hash"`
+	PepperHash      string        `json:"pepper_hash"`
 	MobiusSignature string        `json:"mobius_sign"`
 }
 
