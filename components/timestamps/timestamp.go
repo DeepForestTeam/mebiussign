@@ -21,6 +21,7 @@ type TimeStampSignature struct {
 	SaltHash      string    `json:"salt_hash"`
 	PepperHash    string    `json:"pepper_hash"`
 	MobiusTime    string    `json:"mobius_time"`
+	RsaTime       string        `json:"rsa_time"`
 }
 
 var lastState = TimeStampSignature{}
@@ -91,6 +92,7 @@ func (this *TimeStampSignature)GetCurrent() (err error) {
 	if err != nil {
 		log.Critical("Can not store time stamp:", err)
 	}
+	this.RsaTime = "n/a"
 	return
 }
 
@@ -139,6 +141,7 @@ func copy(from *TimeStampSignature, to *TimeStampSignature) {
 	to.PepperHash = from.PepperHash
 	to.SaltHash = from.SaltHash
 	to.MobiusTime = from.MobiusTime
+	to.RsaTime = from.RsaTime
 }
 
 func joinByteBlocks(b... []byte) (joined []byte) {

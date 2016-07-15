@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"encoding/json"
 	"fmt"
+	"encoding/xml"
 )
 
 func init() {
@@ -96,8 +97,15 @@ func (this *Control)parseRequestData() (err error) {
 func (this *Control)ServeJSON() {
 	this.AutoRender = false
 	json_string, _ := json.MarshalIndent(this.Json, "", "  ")
-	this.Output.Header().Set("Content-Type", "application/json;charset=utf-8")
+	this.Output.Header().Set("Content-Type", "application/json; charset=utf-8")
 	fmt.Fprintf(this.Output, string(json_string))
+	return
+}
+func (this *Control)ServeXML() {
+	this.AutoRender = false
+	xml_string, _ := xml.MarshalIndent(this.Json, "", "  ")
+	this.Output.Header().Set("Content-Type", "application/xml; charset=utf-8")
+	fmt.Fprintf(this.Output, string(xml_string))
 	return
 }
 func (this *Control)RenderTemplate() {

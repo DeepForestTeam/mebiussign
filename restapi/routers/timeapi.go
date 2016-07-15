@@ -22,7 +22,7 @@ func init() {
 }
 
 func (this *TimeApiController)Get() {
-	defer this.ServeJSON()
+	defer this.ServeXML()
 	ts := timestamps.TimeStampSignature{}
 	err := ts.GetCurrent()
 	if err != nil {
