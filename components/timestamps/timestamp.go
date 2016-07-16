@@ -21,7 +21,7 @@ type TimeStampSignature struct {
 	SaltHash      string    `json:"salt_hash"`
 	PepperHash    string    `json:"pepper_hash"`
 	MobiusTime    string    `json:"mobius_time"`
-	RsaTime       string        `json:"rsa_time"`
+	RsaTime       string    `json:"rsa_time"`
 }
 
 var lastState = TimeStampSignature{}
@@ -46,6 +46,7 @@ func (this *TimeStampSignature)GetCurrent() (err error) {
 		copy(&lastState, this)
 		return
 	}
+	this.RsaTime = "n/a"
 	this.UnixTimeStamp = timestamp
 	this.TimeStamp = fmt.Sprintf("%d", timestamp)
 	time_format, err := config.GetString("BASE_TIME_FORMAT")
@@ -92,7 +93,6 @@ func (this *TimeStampSignature)GetCurrent() (err error) {
 	if err != nil {
 		log.Critical("Can not store time stamp:", err)
 	}
-	this.RsaTime = "n/a"
 	return
 }
 

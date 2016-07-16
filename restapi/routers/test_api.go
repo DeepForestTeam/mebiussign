@@ -6,17 +6,22 @@ import (
 	"encoding/json"
 	"github.com/DeepForestTeam/mobiussign/restapi/forest"
 	"github.com/DeepForestTeam/mobiussign/components/log"
-	"github.com/DeepForestTeam/mebiussign/components/sign"
+	"github.com/DeepForestTeam/mobiussign/components/sign"
 )
 
 func InternalTest(w http.ResponseWriter, r *http.Request) {
 	var test_answer map[string]interface{}
 	test_answer = make(map[string]interface{})
-	test_answer["test"] = "BoltTest:Last()"
-	test_object := sign.SignatureRow{}
-	test_object.DataBlock=[]byte("8399EB32571640591483C62C0F223BAAE87F658E2C20E2EF480E4B10EC25C396")
+	test_object := sign.MobiusSigner{}
+	test_object.SignRequest.DataBlock = "The Ultimate Question of Life, the Universe, and Everything:42"
+	test_object.SignRequest.DataNote="The Ultimate Question of Life, the Universe, and Everything"
+	test_object.SignRequest.DataUrl="https://en.wikipedia.org/wiki/Phrases_from_The_Hitchhiker%%27s_Guide_to_the_Galaxy#Answer_to_the_Ultimate_Question_of_Life.2C_the_Universe.2C_and_Everything_.2842.29"
+	err := test_object.ProcessQuery()
+	if err != nil {
+		log.Error(err)
+	}
 	test_answer["sing"] = test_object
-	json_string, _ := json.Marshal(&test_answer)
+	json_string, _ := json.MarshalIndent(&test_answer, "", "  ")
 	fmt.Fprintf(w, string(json_string))
 }
 

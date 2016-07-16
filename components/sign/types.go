@@ -1,10 +1,11 @@
 package sign
 
-import "time"
-
 const (
-	SignatureStorage = "sign_store"
-	SignatereIndex = "sign_index"
+	MobiusStorage = "sign_store"
+
+	DataBlockBase64 = "base64"
+	DataBlockString = "string"
+	DataBlockHex = "hex"
 )
 
 type SignatureRow struct {
@@ -14,27 +15,30 @@ type SignatureRow struct {
 	BlockId         string        `json:"block_id"`
 	//USER PROVIDED DATA
 	ServiceId       string        `json:"service_id"`
-	ObjectID        string        `json:"object_id"`
+	ObjectId        string        `json:"object_id"`
 	ConsumerId      string        `json:"consumer_id"`
 	DataUrl         string        `json:"data_url"`
 	DataNote        string        `json:"data_note"`
 	DataHash        string        `json:"data_hash"`
-	DataBlock       []byte        `json:"data_block"`
+	DataBlock       string        `json:"data_block"`
 	//SYSTEM GIVEN INFO
-	TimeStamp       time.Time     `json:"time_stamp"`
+	TimeStamp       string        `json:"time"`
+	UnixTimeStamp   int64         `json:"unix_time"`
 	TimeStampHash   string        `json:"time_hash"`
-	SaltKey         string        `json:"salt_key"`
+	//Sign info
+	SaltId          string        `json:"salt_id"`
 	SaltHash        string        `json:"salt_hash"`
 	PepperHash      string        `json:"pepper_hash"`
 	MobiusSignature string        `json:"mobius_sign"`
+	RsaSignature    string        `json:"rsa_sign"`
 }
 
 type SignatureRequest struct {
 	//Service and object identification
-	//ServiceId must be 0 for public or personal use
-	ServiceID       string        `json:"service_id"`
-	ObjectID        string        `json:"object_id"`
-	ConsumerID      string        `json:"consumer_id"`
+	//ServiceIdmust be 0 for public or personal use
+	ServiceId       string        `json:"service_id"`
+	ObjectId        string        `json:"object_id"`
+	ConsumerId      string        `json:"consumer_id"`
 	//DATA SECTION
 	DataUrl         string        `json:"data_url"`
 	DataNote        string        `json:"data_note"`
@@ -46,5 +50,28 @@ type SignatureRequest struct {
 }
 
 type SignatureResponse struct {
+	SignId          string        `json:"sign_id"`
+	RowId           uint64        `json:"row_id"`
+	//Reserved for CloudMobius
+	BlockId         string        `json:"block_id"`
 
+	ServiceId       string        `json:"service_id"`
+	ObjectId        string        `json:"object_id"`
+	ConsumerId      string        `json:"consumer_id"`
+
+	DataUrl         string        `json:"data_url"`
+	DataNote        string        `json:"data_note"`
+	DataHash        string        `json:"data_hash"`
+	DataBlock       string        `json:"data_block"`
+	DataBlockFormat string        `json:"data_format"`
+
+	TimeStamp       string        `json:"time"`
+	UnixTimeStamp   int64         `json:"unix_time"`
+	TimeStampHash   string        `json:"time_hash"`
+
+	SaltId          string        `json:"salt_id"`
+	SaltHash        string        `json:"salt_hash"`
+	PepperHash      string        `json:"pepper_hash"`
+	MobiusSignature string        `json:"mobius_sign"`
+	RsaSignature    string        `json:"rsa_sign"`
 }
