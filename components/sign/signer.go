@@ -68,16 +68,16 @@ func (this *MobiusSigner)processData() (err error) {
 	//reserved
 	last_record := SignatureRow{}
 	last_key, err := store.Last(MobiusStorage, &last_record)
+	base_salt, err := config.GetString("BASE_WORLD_HASH")
+	if err != nil {
+		return err
+	}
 	if err != nil {
 		if err != store.ErrKeyNotFound && err != store.ErrSectionNotFound {
 			log.Error("Storage error:", err)
 			return
 		}
 		this.SignRow.SaltId = ""
-		base_salt, err := config.GetString("BASE_WORLD_HASH")
-		if err != nil {
-			return err
-		}
 		this.SignRow.SaltHash = base_salt
 	} else {
 		this.SignRow.SaltId = last_key
