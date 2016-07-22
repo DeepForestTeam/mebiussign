@@ -55,12 +55,12 @@ func (this *BoltDriver)Close() {
 	this.db.Close()
 }
 
-func (this *BoltDriver)Set(bucket_name, key string, data interface{}) (err error) {
+func (this *BoltDriver)Set(bucket_name, key string, data interface{}) (id int64, err error) {
 	this.lockBucket(bucket_name)
 	defer this.unlockBucket(bucket_name)
 	ref := reflect.ValueOf(data)
 	if !ref.IsValid() || ref.Kind() != reflect.Ptr {
-		return ErrPtrNeeded
+		return 0, ErrPtrNeeded
 	}
 	err = this.db.Update(func(tx *bolt.Tx) error {
 		bucket, err := tx.CreateBucketIfNotExists([]byte(bucket_name))
@@ -76,6 +76,7 @@ func (this *BoltDriver)Set(bucket_name, key string, data interface{}) (err error
 		if err != nil {
 			return err
 		}
+		id = int64(num)
 		//Crete Index
 		index_bucket, err := tx.CreateBucketIfNotExists([]byte(bucket_name + indexPostfix))
 		if err != nil {

@@ -89,7 +89,7 @@ func (this *TimeStampSignature)GetCurrent() (err error) {
 	}
 	//Save last state
 	copy(this, &lastState)
-	err = store.Set(TimeStampStorage, this.MobiusTime, this)
+	_, err = store.Set(TimeStampStorage, this.MobiusTime, this)
 	if err != nil {
 		log.Critical("Can not store time stamp:", err)
 	}

@@ -10,7 +10,7 @@ const (
 
 type SignatureRow struct {
 	SignId          string        `json:"sign_id"`
-	RowId           uint64        `json:"row_id"`
+	RowId           int64         `json:"row_id"`
 	//Reserved for CloudMobius
 	BlockId         string        `json:"block_id"`
 	//USER PROVIDED DATA
@@ -21,6 +21,7 @@ type SignatureRow struct {
 	DataNote        string        `json:"data_note"`
 	DataHash        string        `json:"data_hash"`
 	DataBlock       string        `json:"data_block"`
+	DataBlockFormat string        `json:"data_format"`
 	//SYSTEM GIVEN INFO
 	TimeStamp       string        `json:"time"`
 	UnixTimeStamp   int64         `json:"unix_time"`
@@ -51,7 +52,7 @@ type SignatureRequest struct {
 
 type SignatureResponse struct {
 	SignId          string        `json:"sign_id"`
-	RowId           uint64        `json:"row_id"`
+	RowId           int64         `json:"row_id"`
 	//Reserved for CloudMobius
 	BlockId         string        `json:"block_id"`
 

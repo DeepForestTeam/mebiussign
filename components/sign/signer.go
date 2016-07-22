@@ -54,6 +54,7 @@ func (this *MobiusSigner)processData() (err error) {
 	this.SignRow.DataNote = this.SignRequest.DataNote
 	this.SignRow.DataHash = this.SignRequest.DataHash
 	this.SignRow.DataBlock = this.SignRequest.DataBlock
+	this.SignRow.DataBlockFormat = this.SignRequest.DataBlockFormat
 
 	mobius_time := timestamps.TimeStampSignature{}
 	err = mobius_time.GetCurrent()
@@ -88,7 +89,9 @@ func (this *MobiusSigner)processData() (err error) {
 		log.Error("Can create MobiusSign:", err)
 	}
 	key := this.SignRow.MobiusSignature
-	err = store.Set(MobiusStorage, key, &this.SignRow)
+	id, err := store.Set(MobiusStorage, key, &this.SignRow)
+	this.SignRow.RowId=id
+	this.fillResponse()
 	return
 }
 func (this *MobiusSigner)prepareData() (err error) {
@@ -135,7 +138,32 @@ func (this *MobiusSigner)Sign() (err error) {
 	this.SignRow.MobiusSignature = calculateHash(signin_block)
 	return
 }
+func (this *MobiusSigner)fillResponse() {
+	this.SignResponse.SignId = this.SignRow.SignId
+	this.SignResponse.RowId = this.SignRow.RowId
+	this.SignResponse.BlockId = this.SignRow.BlockId
 
+	this.SignResponse.ServiceId = this.SignRow.ServiceId
+	this.SignResponse.ObjectId = this.SignRow.ObjectId
+	this.SignResponse.ConsumerId = this.SignRow.ConsumerId
+
+	this.SignResponse.DataUrl = this.SignRow.DataUrl
+	this.SignResponse.DataNote = this.SignRow.DataNote
+	this.SignResponse.DataHash = this.SignRow.DataHash
+	this.SignResponse.DataBlock = this.SignRow.DataBlock
+	this.SignResponse.DataBlockFormat = this.SignRow.DataBlockFormat
+
+	this.SignResponse.TimeStamp = this.SignRow.TimeStamp
+	this.SignResponse.UnixTimeStamp = this.SignRow.UnixTimeStamp
+	this.SignResponse.TimeStampHash = this.SignRow.TimeStampHash
+
+	this.SignResponse.SaltId = this.SignRow.SaltId
+	this.SignResponse.SaltHash = this.SignRow.SaltHash
+	this.SignResponse.PepperHash = this.SignRow.PepperHash
+	this.SignResponse.MobiusSignature = this.SignRow.MobiusSignature
+	this.SignResponse.RsaSignature = this.SignRow.RsaSignature
+
+}
 func (this *MobiusSigner)createRequestDataHash() (err error) {
 	data_block, err := this.decodeRequestDataBlock()
 	if err != nil {
@@ -145,7 +173,6 @@ func (this *MobiusSigner)createRequestDataHash() (err error) {
 	this.SignRequest.DataHash = data_hash
 	return
 }
-
 func (this *MobiusSigner)checkRequestDataHash() (err error) {
 	data_block, err := this.decodeRequestDataBlock()
 	if err != nil {

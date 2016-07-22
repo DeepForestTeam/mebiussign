@@ -11,7 +11,7 @@ type GlobalStore struct {
 type StorageDriver interface {
 	Connect() error
 	Close()
-	Set(section, key string, data interface{}) error
+	Set(section, key string, data interface{}) (int64, error)
 	Get(section, key string, data interface{}) error
 	Count(section string) (int, error)
 	Last(section string, data interface{}) (string, error)
@@ -35,7 +35,7 @@ func ConnectDB() (err error) {
 	return
 }
 
-func Set(model_name, key string, object interface{}) (err error) {
+func Set(model_name, key string, object interface{}) (id int64, err error) {
 	return storage.driver.Set(model_name, key, object)
 }
 func Get(model_name, key string, object interface{}) (err error) {
