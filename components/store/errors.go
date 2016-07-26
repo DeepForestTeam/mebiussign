@@ -36,5 +36,7 @@ var (
 	ErrEmtpySection = errors.New("empty section")
 
 	ErrNotIndexed = errors.New("section index error")
+
+	ErrInvalidIndex = errors.New("index error created")
 )
 

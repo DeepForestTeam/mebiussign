@@ -51,7 +51,7 @@ func TimeApiCheck(w http.ResponseWriter, r *http.Request) {
 	} else {
 
 	}
-	time_stamp, _ := json.Marshal(ts)
+	time_stamp, _ := json.MarshalIndent(ts, "", "  ")
 	log.Debug("Get time by stamp")
 	fmt.Fprintf(w, string(time_stamp))
 }

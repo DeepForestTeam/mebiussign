@@ -90,7 +90,14 @@ func (this *MobiusSigner)processData() (err error) {
 	}
 	key := this.SignRow.MobiusSignature
 	id, err := store.Set(MobiusStorage, key, &this.SignRow)
-	this.SignRow.RowId=id
+	this.SignRow.RowId = id
+	if err != nil {
+		log.Warning(err)
+	}
+	_, err = store.Set(MobiusStorage, key, &this.SignRow)
+	if err != nil {
+		log.Warning(err)
+	}
 	this.fillResponse()
 	return
 }
