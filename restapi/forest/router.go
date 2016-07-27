@@ -19,11 +19,18 @@ func AddRouterFunc(uri string, f func(http.ResponseWriter, *http.Request)) {
 func AddRouter(uri string, handler Controller) {
 	router.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
 		handler.Process(w, r)
-		switch r.Method {
-		case "GET":
-			handler.Get()
-		case "POST":
-			handler.Post()
+		stop_process := handler.PreRoute()
+		if !stop_process {
+			switch r.Method {
+			case "GET":
+				handler.Get()
+			case "POST":
+				handler.Post()
+			case "PUT":
+				handler.Put()
+			case "DELETE":
+				handler.Delete()
+			}
 		}
 		handler.RenderTemplate()
 	})

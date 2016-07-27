@@ -15,8 +15,12 @@ func init() {
 
 type Controller interface {
 	Process(http.ResponseWriter, *http.Request)
+	PreRoute() (bool)
 	Get()
 	Post()
+	Put()
+	Delete()
+	Option()
 	RenderTemplate()
 }
 
@@ -34,7 +38,8 @@ type Control struct {
 	//Output settings
 	AutoRender    bool
 	Template      string
-	Json          interface{}
+	Data          interface{}
+	HasErrors     bool
 }
 type Context struct {
 	Url      string
@@ -47,12 +52,15 @@ type Context struct {
 }
 
 func (this *Control)Process(w http.ResponseWriter, r *http.Request) {
+	this.HasErrors = false
 	this.Output = w
 	this.Input = r
 	this.Context.UrlVars = mux.Vars(r)
 	return
 }
-
+func (this *Control)PreRoute() (bool) {
+	return false
+}
 func (this *Control)Get() {
 	if this.GetHandler != nil {
 		this.GetHandler(this)
@@ -83,8 +91,9 @@ func (this *Control)Option() {
 	this.Output.WriteHeader(http.StatusMethodNotAllowed)
 	this.Output.Write([]byte("405 Method Not Allowed"))
 }
-func (this *Control)Error(http_error_code string) {
 
+func (this *Control)Error(http_error_code string) {
+	//@todo show error page
 }
 
 func (this *Control)parseRequestData() (err error) {
@@ -95,14 +104,24 @@ func (this *Control)parseRequestData() (err error) {
 //Support mehtods
 func (this *Control)ServeJSON() {
 	this.AutoRender = false
-	json_string, _ := json.MarshalIndent(this.Json, "", "  ")
+	json_string, err := json.MarshalIndent(this.Data, "", "  ")
+	if err != nil {
+		log.Critical("Can not marshal JSON:", err)
+		this.Output.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	this.Output.Header().Set("Content-Type", "application/json; charset=utf-8")
 	this.Output.Write(json_string)
 	return
 }
 func (this *Control)ServeXML() {
 	this.AutoRender = false
-	xml_string, _ := xml.MarshalIndent(this.Json, "", "  ")
+	xml_string, err := xml.MarshalIndent(this.Data, "", "  ")
+	if err != nil {
+		log.Critical("Can not marshal JSON:", err)
+		this.Output.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	this.Output.Header().Set("Content-Type", "application/xml; charset=utf-8")
 	this.Output.Write(xml_string)
 	return
