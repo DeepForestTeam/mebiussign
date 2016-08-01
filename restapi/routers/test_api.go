@@ -6,6 +6,7 @@ import (
 	"github.com/DeepForestTeam/mobiussign/restapi/forest"
 	"github.com/DeepForestTeam/mobiussign/components/log"
 	"github.com/DeepForestTeam/mobiussign/components/sign"
+	"github.com/DeepForestTeam/mobiussign/components/serviceproviders"
 )
 
 func InternalTest(w http.ResponseWriter, r *http.Request) {
@@ -27,6 +28,18 @@ func InternalTest(w http.ResponseWriter, r *http.Request) {
 func InternalTest2(w http.ResponseWriter, r *http.Request) {
 	var test_answer map[string]interface{}
 	test_answer = make(map[string]interface{})
+	object := serviceproviders.ServiceProviderRow{}
+
+	object.ServiceId = "DEEDSCHAIN01"
+	object.Contacts.Country = "UA"
+	object.Contacts.Organisation = "DeedsChain Ink"
+	object.Contacts.Person.FullName = "Ashot Ishimbaevich"
+	object.Contacts.Person.Email = "team@deedschain.com"
+	object.Contacts.Person.Phone = "+102545997783"
+	object.Contacts.ZipCode = "12300"
+	object.Contacts.City = "Kiyv"
+
+	test_answer["SERVICE_RECORD"] = object
 	json_string, _ := json.MarshalIndent(&test_answer, "", "  ")
 	w.Write(json_string)
 }

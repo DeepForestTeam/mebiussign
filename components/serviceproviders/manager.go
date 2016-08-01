@@ -1,4 +1,4 @@
-package services
+package serviceproviders
 
 import "github.com/DeepForestTeam/mobiussign/components/store"
 

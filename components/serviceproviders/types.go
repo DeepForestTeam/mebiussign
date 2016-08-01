@@ -1,4 +1,4 @@
-package services
+package serviceproviders
 
 import (
 	"errors"
@@ -26,6 +26,7 @@ type ServiceProviderRow struct {
 	Contacts          struct {
 				  Organisation       string
 				  Person             struct {
+							     Title    string
 							     FullName string
 							     Email    string
 							     Phone    string
@@ -34,6 +35,7 @@ type ServiceProviderRow struct {
 				  ZipCode            string
 				  StreetAddressLine1 string
 				  StreetAddressLine2 string
+				  City               string
 			  }
 	MetaInfo          struct {
 				  RegiserDate time.Time
@@ -45,7 +47,7 @@ type ServiceProviderRow struct {
 			  }
 }
 
-type ServiceProviderIndex struct {
+type ServiceProviderApiKeys struct {
 	ServiceId string
 	ApiKey    string
 	RsaPubKey string
