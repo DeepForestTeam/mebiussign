@@ -7,17 +7,11 @@ import (
 	"github.com/DeepForestTeam/mobiussign/components/timestamps"
 )
 
-type TimeApiСontroller struct {
+type TimeApiController struct {
 	forest.Control
 }
 
-type ErrorMessage struct {
-	Result     string `json:"result"`
-	Note       string `json:"note"`
-	ResultCode int    `json:"result_code"`
-}
-
-func (this *TimeApiСontroller)Get() {
+func (this *TimeApiController)Get() {
 	defer this.ServeJSON()
 	ts := timestamps.TimeStampSignature{}
 	time_hash := this.Context.UrlVars["time_hash"]
@@ -29,6 +23,7 @@ func (this *TimeApiСontroller)Get() {
 			return
 		}
 	} else {
+		//@todo Check hash
 		err := ts.GetBySign(time_hash)
 		if err != nil {
 			this.Data=ErrorMessage{Result:"Hash not found", ResultCode:404}

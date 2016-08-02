@@ -9,4 +9,6 @@ var (
 	ErrInvalidDataHash = errors.New("invalid data sha2 hash")
 	ErrInvalidDataHashFormat = errors.New("data hash not SHA512")
 	ErrInvalidDataFormat = errors.New("invalid data format")
+
+	ErrSignNotFound = errors.New("signature not found")
 )
