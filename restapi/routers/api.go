@@ -13,6 +13,8 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "MobiusSign™ API")
 }
 func Ping(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Access-Control-Allow-Methods", "*")
+	w.WriteHeader(200)
 	var ping_answer map[string]interface{}
 	ping_answer = make(map[string]interface{})
 	ping_answer["ping"] = "pong"
@@ -22,7 +24,6 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 	ping_string, _ := json.Marshal(ping_answer)
 	fmt.Fprintf(w, string(ping_string))
 }
-
 
 func init() {
 	log.Info("* Init base API")

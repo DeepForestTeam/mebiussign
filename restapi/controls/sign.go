@@ -37,6 +37,6 @@ func (this *SignController)Post() {
 	defer this.ServeJSON()
 	sign_result := sign.MobiusSigner{}
 	raw_signature_request := this.Input.Body
-	log.Warning("SIGN REQUEST:", string(raw_signature_request))
+	log.Warning("SIGN REQUEST:", raw_signature_request)
 	this.Data = sign_result
 }
