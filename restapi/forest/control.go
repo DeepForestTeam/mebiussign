@@ -110,6 +110,7 @@ func (this *Control)ServeJSON() {
 		this.Output.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	this.Output.Header().Set("Access-Control-Allow-Origin", "*")
 	this.Output.Header().Set("Content-Type", "application/json; charset=utf-8")
 	this.Output.Write(json_string)
 	return
@@ -122,6 +123,7 @@ func (this *Control)ServeXML() {
 		this.Output.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	this.Output.Header().Set("Access-Control-Allow-Origin", "*")
 	this.Output.Header().Set("Content-Type", "application/xml; charset=utf-8")
 	this.Output.Write(xml_string)
 	return
