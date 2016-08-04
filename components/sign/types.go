@@ -51,6 +51,7 @@ type SignatureRequest struct {
 }
 
 type SignatureResponse struct {
+	Result          string        `json:"result"`
 	SignId          string        `json:"sign_id"`
 	RowId           int64         `json:"row_id"`
 	//Reserved for CloudMobius

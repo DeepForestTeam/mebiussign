@@ -30,6 +30,7 @@ func (this *SignController)Get() {
 		}
 		return
 	}
+	mobius_sign.SignResponse.Result = "OK"
 	this.Data = mobius_sign.SignResponse
 }
 //Create signature
