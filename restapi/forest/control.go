@@ -20,7 +20,7 @@ type Controller interface {
 	Post()
 	Put()
 	Delete()
-	Option()
+	Options()
 	RenderTemplate()
 }
 
@@ -87,9 +87,11 @@ func (this *Control)Delete() {
 	this.Output.WriteHeader(http.StatusMethodNotAllowed)
 	this.Output.Write([]byte("405 Method Not Allowed"))
 }
-func (this *Control)Option() {
-	this.Output.WriteHeader(http.StatusMethodNotAllowed)
-	this.Output.Write([]byte("405 Method Not Allowed"))
+func (this *Control)Options() {
+	this.Output.Header().Set("Access-Control-Allow-Origin", "*")
+	this.Output.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	this.Output.Header().Set("Access-Control-Allow-Headers", "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type")
+	this.Output.WriteHeader(http.StatusOK)
 }
 
 func (this *Control)Error(http_error_code string) {

@@ -16,8 +16,9 @@ func AddRouterFunc(uri string, f func(http.ResponseWriter, *http.Request)) {
 	log.Debug("Register flat handler for:", uri)
 	router.HandleFunc(uri, f)
 }
-func AddRouter(uri string, handler Controller) {
+func AddRouter(uri string, base_handler Controller) {
 	router.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
+		handler := base_handler
 		handler.Process(w, r)
 		stop_process := handler.PreRoute()
 		if !stop_process {
@@ -30,6 +31,8 @@ func AddRouter(uri string, handler Controller) {
 				handler.Put()
 			case "DELETE":
 				handler.Delete()
+			case "OPTIONS":
+				handler.Options()
 			}
 		}
 		handler.RenderTemplate()
