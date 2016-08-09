@@ -16,6 +16,28 @@ func IsSha512(str string) bool {
 	if len(str) != 128 && len(str) != 64 {
 		return false
 	}
+	return isHex16chars(str)
+}
+
+func IsAlphaNumeric(str string) bool {
+	for _, v := range str {
+		if ('Z' < v || v < 'A') && ('z' < v || v < 'a') && ('9' < v || v < '0') {
+			log.Warning("Invalid char:", string(v))
+			return false
+		}
+	}
+	return true
+}
+
+func IsHex(str string) bool {
+	clear_whitespaces := regexp.MustCompile(`\s`)
+	final := clear_whitespaces.ReplaceAllString(str, "")
+	if (len(final) / 2) * 2 != len(final) {
+		return false
+	}
+	return isHex16chars(final)
+}
+func isHex16chars(str string) bool {
 	for _, v := range str {
 		if ('F' < v || v < 'A') && ('f' < v || v < 'a') && ('9' < v || v < '0') {
 			return false

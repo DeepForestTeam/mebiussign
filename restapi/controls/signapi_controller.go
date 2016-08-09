@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"errors"
+	"html"
 )
 
 type SignController struct {
@@ -39,7 +40,7 @@ func (this *SignController)Get() {
 	mobius_sign.SignResponse.Result = "OK"
 	this.Data = mobius_sign.SignResponse
 }
-//Create signature
+
 func (this *SignController)Post() {
 	defer this.ServeJSON()
 	this.Output.Header().Set("Access-Control-Allow-Origin", "*")
@@ -77,15 +78,40 @@ func (this *SignController)Post() {
 		}
 		return
 	}
+	this.prepareSignRequest(&signer.SignRequest)
+	err = signer.ProcessQuery()
+	if err != nil {
+		log.Error("Invalid request data:", err)
+		this.Data = ErrorMessage{
+			Result:err.Error(),
+			ResultCode:406,
+		}
+		return
+	}
 	this.Data = signer.SignResponse
 }
 
 func (this *SignController)validateSignRequest(sign_request *sign.SignatureRequest) (err error) {
-	if sign_request.DataHash == "" && sign_request.DataHash == "" {
+	if sign_request.DataHash == "" && sign_request.DataBlock == "" {
 		return errors.New("no data for sign")
 	} else if sign_request.DataHash != "" {
 		if !validation.IsSha512(sign_request.DataHash) {
 			return errors.New("invalid data hash")
+		}
+	}
+	if sign_request.ServiceId != "" {
+		if !validation.IsAlphaNumeric(sign_request.ServiceId) {
+			return errors.New("invalid chars in service_id")
+		}
+	}
+	if sign_request.ObjectId != "" {
+		if !validation.IsAlphaNumeric(sign_request.ObjectId) {
+			return errors.New("invalid chars in object_id")
+		}
+	}
+	if sign_request.ConsumerId != "" {
+		if !validation.IsAlphaNumeric(sign_request.ConsumerId) {
+			return errors.New("invalid chars in consumer_id")
 		}
 	}
 	if sign_request.DataUrl != "" {
@@ -102,6 +128,17 @@ func (this *SignController)validateSignRequest(sign_request *sign.SignatureReque
 				return errors.New("invalid data block: not base64")
 			}
 		}
+		if sign_request.DataBlockFormat == sign.DataBlockHex {
+			if !validation.IsHex(sign_request.DataBlock) {
+				return errors.New("invalid data block: not valid hex")
+			}
+		}
 	}
 	return
+}
+
+func (this *SignController)prepareSignRequest(sign_request *sign.SignatureRequest) {
+	if sign_request.DataNote != "" {
+		sign_request.DataNote = html.EscapeString(sign_request.DataNote)
+	}
 }
