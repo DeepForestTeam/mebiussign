@@ -97,7 +97,7 @@ func (this *SignController)validateSignRequest(sign_request *sign.SignatureReque
 		if sign_request.DataBlockFormat != sign.DataBlockBase64 && sign_request.DataBlockFormat != sign.DataBlockHex && sign_request.DataBlockFormat != sign.DataBlockString {
 			return errors.New("unknown data flock format")
 		}
-		if sign_request.DataBlockFormat == sign.DataBlockBase64{
+		if sign_request.DataBlockFormat == sign.DataBlockBase64 {
 
 		}
 	}

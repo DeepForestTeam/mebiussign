@@ -43,6 +43,6 @@ func IsUrl(str string) bool {
 }
 
 func IsBase64(str string) bool {
-
+	
 	return true
 }
