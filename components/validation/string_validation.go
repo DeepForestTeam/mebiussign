@@ -4,6 +4,8 @@ import (
 	"regexp"
 	"net/url"
 	"strings"
+	"encoding/base64"
+	"github.com/DeepForestTeam/mobiussign/components/log"
 )
 
 func init() {
@@ -43,6 +45,23 @@ func IsUrl(str string) bool {
 }
 
 func IsBase64(str string) bool {
-	
+	str = strings.Replace(str, "\n", "", -1)
+	str = strings.Replace(str, "\r", "", -1)
+	str = strings.Replace(str, " ", "", -1)
+	str = strings.Replace(str, "\t", "", -1)
+
+	if len(str) < 3 {
+		return false
+	}
+	for _, v := range str {
+		if ('Z' < v || v < 'A') && ('z' < v || v < 'a') && ('9' < v || v < '0') && (v != '+' && v != '/' && v != '=') {
+			return false
+		}
+	}
+	_, err := base64.StdEncoding.DecodeString(str)
+	if err != nil {
+		log.Error(err)
+		return false
+	}
 	return true
 }

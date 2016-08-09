@@ -9,7 +9,7 @@ import (
 	"github.com/DeepForestTeam/mobiussign/components/config"
 	"fmt"
 	"encoding/json"
-	"github.com/iris-contrib/errors"
+	"errors"
 )
 
 type SignController struct {
@@ -98,7 +98,9 @@ func (this *SignController)validateSignRequest(sign_request *sign.SignatureReque
 			return errors.New("unknown data flock format")
 		}
 		if sign_request.DataBlockFormat == sign.DataBlockBase64 {
-
+			if !validation.IsBase64(sign_request.DataBlock) {
+				return errors.New("invalid data block: not base64")
+			}
 		}
 	}
 	return
