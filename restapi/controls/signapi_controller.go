@@ -72,8 +72,10 @@ func (this *SignController)Post() {
 	err = this.validateSignRequest(&signer.SignRequest)
 	if err != nil {
 		log.Error("Invalid request data:", err)
+		error_msg := err.Error()
 		this.Data = ErrorMessage{
-			Result:err.Error(),
+			Result:error_msg,
+			Note:error_msg,
 			ResultCode:406,
 		}
 		return
@@ -82,12 +84,15 @@ func (this *SignController)Post() {
 	err = signer.ProcessQuery()
 	if err != nil {
 		log.Error("Invalid request data:", err)
+		error_msg := err.Error()
 		this.Data = ErrorMessage{
-			Result:err.Error(),
+			Result:error_msg,
+			Note:error_msg,
 			ResultCode:406,
 		}
 		return
 	}
+	signer.SignResponse.Result = "OK"
 	this.Data = signer.SignResponse
 }
 
