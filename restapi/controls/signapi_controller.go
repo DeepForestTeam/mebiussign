@@ -150,4 +150,7 @@ func (this *SignController)prepareSignRequest(sign_request *sign.SignatureReques
 	if sign_request.DataHash != "" {
 		sign_request.DataHash = strings.ToUpper(sign_request.DataHash)
 	}
+	if sign_request.ServiceSign == "" {
+		sign_request.ServiceId = ""
+	}
 }
