@@ -1,6 +1,5 @@
 package controls
 
-
 import (
 	"github.com/DeepForestTeam/mobiussign/restapi/forest"
 	"github.com/DeepForestTeam/mobiussign/components/log"
@@ -19,16 +18,18 @@ func (this *TimeApiController)Get() {
 		err := ts.GetCurrent()
 		if err != nil {
 			log.Error("Can not create new time stamp!")
-			this.Data=ErrorMessage{Result:"Server error", ResultCode:500}
+			this.Data = ErrorMessage{Result:"Server error", ResultCode:500}
 			return
 		}
 	} else {
 		//@todo Check hash
 		err := ts.GetBySign(time_hash)
 		if err != nil {
-			this.Data=ErrorMessage{Result:"Hash not found", ResultCode:404}
+			this.Data = ErrorMessage{Result:"Hash not found", ResultCode:404}
 			return
 		}
 	}
-	this.Data = ts
+	ts_response := timestamps.TimeStampResponse{}
+	ts_response.LoadFromSignature(ts)
+	this.Data = ts_response
 }

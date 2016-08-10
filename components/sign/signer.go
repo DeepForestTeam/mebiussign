@@ -15,10 +15,11 @@ import (
 )
 
 type MobiusSigner struct {
-	SignRequest  SignatureRequest
-	SignRow      SignatureRow
-	SignResponse SignatureResponse
-	mux          sync.Mutex
+	SignRequest    SignatureRequest
+	SignRow        SignatureRow
+	SignResponse   SignatureResponse
+	SignShortIndex SignatureShortIndex
+	mux            sync.Mutex
 }
 
 func (this *MobiusSigner)ProcessQuery() (err error) {
@@ -68,7 +69,7 @@ func (this *MobiusSigner)processData() (err error) {
 	this.SignRow.PepperHash = fmt.Sprintf("%X", generatePepper())
 	//reserved
 	last_record := SignatureRow{}
-	last_key, err := store.Last(MobiusStorage, &last_record)
+	_, err = store.Last(MobiusStorage, &last_record)
 	base_salt, err := config.GetString("BASE_WORLD_HASH")
 	if err != nil {
 		return err
@@ -81,7 +82,7 @@ func (this *MobiusSigner)processData() (err error) {
 		this.SignRow.SaltId = ""
 		this.SignRow.SaltHash = base_salt
 	} else {
-		this.SignRow.SaltId = last_key
+		this.SignRow.SaltId = last_record.SignId
 		this.SignRow.SaltHash = last_record.MobiusSignature
 	}
 	err = this.Sign()
@@ -90,14 +91,21 @@ func (this *MobiusSigner)processData() (err error) {
 	}
 	key := this.SignRow.MobiusSignature
 	id, err := store.Set(MobiusStorage, key, &this.SignRow)
-	this.SignRow.RowId = id
 	if err != nil {
 		log.Warning(err)
 	}
+	this.SignRow.RowId = id
+	//@todo Reserved for destributed cloud version
+	this.SignRow.BlockId = "0000000"
+
+	sign_id := this.generateSignId()
+	this.SignRow.SignId = sign_id
 	_, err = store.Set(MobiusStorage, key, &this.SignRow)
 	if err != nil {
 		log.Warning(err)
 	}
+	short_sign_index := SignatureShortIndex{SignId:sign_id, MobiusSign:this.SignRow.MobiusSignature}
+	_, err = store.Set(MobiusShortIndexStorage, sign_id, &short_sign_index)
 	this.fillResponse()
 	return
 }
@@ -110,7 +118,7 @@ func (this *MobiusSigner)prepareData() (err error) {
 	if this.SignRequest.DataBlockFormat == "" {
 		this.SignRequest.DataBlockFormat = DataBlockString
 	}
-	if this.SignRequest.DataHash != "" && len(this.SignRequest.DataHash) != 64 {
+	if this.SignRequest.DataHash != "" && len(this.SignRequest.DataHash) != 64 &&  len(this.SignRequest.DataHash) != 128 {
 		return ErrInvalidDataHashFormat
 	}
 	return
@@ -205,6 +213,19 @@ func (this *MobiusSigner)decodeRequestDataBlock() (data_block []byte, err error)
 	return
 }
 
+func (this *MobiusSigner)generateSignId() (sign_id string) {
+	sign_id_block := make([]byte, 8)
+	rand.Read(sign_id_block)
+	sign_id = fmt.Sprintf("%X", sign_id_block)
+	row := SignatureShortIndex{}
+	err := store.Get(MobiusShortIndexStorage, sign_id, &row)
+	if err != nil {
+		return sign_id
+	}
+	return this.generateSignId()
+
+}
+
 func calculateHash(bytes_block []byte) (hash string) {
 	hasher := sha512.New()
 	hasher.Write(bytes_block)
@@ -223,6 +244,7 @@ func generatePepper() (pepper []byte) {
 	rand.Read(pepper)
 	return
 }
+
 func joinByteBlocks(b... []byte) (joined []byte) {
 	for _, block := range b {
 		joined = append(joined, block...)

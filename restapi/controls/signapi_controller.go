@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"errors"
 	"html"
+	"strings"
 )
 
 type SignController struct {
@@ -145,5 +146,8 @@ func (this *SignController)validateSignRequest(sign_request *sign.SignatureReque
 func (this *SignController)prepareSignRequest(sign_request *sign.SignatureRequest) {
 	if sign_request.DataNote != "" {
 		sign_request.DataNote = html.EscapeString(sign_request.DataNote)
+	}
+	if sign_request.DataHash != "" {
+		sign_request.DataHash = strings.ToUpper(sign_request.DataHash)
 	}
 }

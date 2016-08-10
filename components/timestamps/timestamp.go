@@ -23,6 +23,16 @@ type TimeStampSignature struct {
 	MobiusTime    string    `json:"mobius_time"`
 	RsaTime       string    `json:"rsa_time"`
 }
+type TimeStampResponse struct {
+	Result        string    `json:"result"`
+	TimeZone      string    `json:"time_zone"`
+	TimeStamp     string    `json:"time"`
+	UnixTimeStamp int64     `json:"unix_time"`
+	SaltHash      string    `json:"salt_hash"`
+	PepperHash    string    `json:"pepper_hash"`
+	MobiusTime    string    `json:"mobius_time"`
+	RsaTime       string    `json:"rsa_time"`
+}
 
 var lastState = TimeStampSignature{}
 
@@ -160,4 +170,16 @@ func generatePepper() (pepper []byte) {
 	pepper = make([]byte, 8)
 	rand.Read(pepper)
 	return
+}
+
+func (this *TimeStampResponse)LoadFromSignature(origin TimeStampSignature) {
+	this.Result = "OK"
+	this.TimeZone = origin.TimeZone
+	this.TimeStamp = origin.TimeStamp
+	this.UnixTimeStamp = origin.UnixTimeStamp
+	this.SaltHash = origin.SaltHash
+	this.PepperHash = origin.PepperHash
+	this.MobiusTime = origin.MobiusTime
+	this.RsaTime = origin.RsaTime
+
 }

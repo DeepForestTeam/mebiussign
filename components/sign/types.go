@@ -2,12 +2,17 @@ package sign
 
 const (
 	MobiusStorage = "sign_store"
+	MobiusShortIndexStorage = "sign_store_short_link"
 
 	DataBlockBase64 = "base64"
 	DataBlockString = "string"
 	DataBlockHex = "hex"
 )
 
+type SignatureShortIndex struct {
+	SignId     string
+	MobiusSign string
+}
 type SignatureRow struct {
 	SignId          string        `json:"sign_id"`
 	RowId           int64         `json:"row_id"`
