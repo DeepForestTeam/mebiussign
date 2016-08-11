@@ -39,7 +39,7 @@ http://mobiussign.com/api/time
 
 Example Response:
 
-```
+```json
 {
   "result": "OK",
   "time_zone": "UTC",
@@ -67,7 +67,7 @@ http://mobiussign.com/api/time/51BB0B1727BC49FD60459518CCAF01EF00A149CE7F5F368CF
 
 Example Response:
 
-```
+```json
 {
   "result": "OK",
   "time_zone": "UTC",
@@ -81,7 +81,7 @@ Example Response:
 ```
 In case of error:
 
-```
+```json
 {
   "result": "Hash not found",
   "note": "",
@@ -154,7 +154,7 @@ Returns the following fields:
 
 Example Response:
 
-```
+```json
 {
   "result": "OK",
   "sign_id": "51A502C5CEB5457C",
@@ -197,7 +197,7 @@ http://mobiussign.com/api/sign/9C5B52B8914B30AB0F4459F62B34D1FEFD5B2957E0E73B874
 
 Example Response:
 
-```
+```json
 {
   "result": "OK",
   "sign_id": "51A502C5CEB5457C",
@@ -224,7 +224,7 @@ Example Response:
 
 In case of error:
 
-```
+```json
 {
   "result": "Signature not found",
   "note": "",
@@ -234,7 +234,7 @@ In case of error:
 
 ##PHP Usage example
 
-```
+```php
 <?php
 /**
  * MobiusSign PHP Example
